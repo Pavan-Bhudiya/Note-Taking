@@ -1,0 +1,4 @@
+{
+	"title":"my story",
+	"content":"i was 10 years old when i was 2"
+}

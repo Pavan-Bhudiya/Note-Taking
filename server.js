@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const path = require('path')
 const fs = require('fs');
+const { notStrictEqual } = require('assert');
 const PORT = process.env.PORT;
 
 
@@ -15,16 +16,22 @@ app.use(morgan('combined',{stream:accessLog}));
 
 
 //the note array
-let note =[];
+let note =[
+	{"id":1,
+	"title":"my story",
+	"content":"i was 10 years old when i was 2"
+}
+];
 
+//isServer up
 app.get('/',(req,res)=>{
 	res.send('server active');
 });
-
+//get every note
 app.get('/note',(req,res)=>{
 	res.status(200).json(note)
 });
-
+//post route create new note
 app.post('/note',(req,res)=>{
 const newNote = {id:note.length +1, ...req.body};
 if(!req.body.title || !req.body.content){
@@ -33,6 +40,16 @@ if(!req.body.title || !req.body.content){
 note.push(newNote);
 res.status(201).json(newNote)
 });
+
+//put route replace note
+
+app.patch('/note/edit/:id', (req, res) => {
+  const notez = note.find((t) => t.id === parseInt(req.params.id)); // Array.find()
+  note[parseInt(req.params.id)].push(req.body)
+  res.status(200).json(notez);
+});
+
+
 
 app.listen(PORT,()=>{
 	console.log(`active on ${PORT}`)

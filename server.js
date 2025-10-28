@@ -41,12 +41,15 @@ note.push(newNote);
 res.status(201).json(newNote)
 });
 
-//put route replace note
+//patch route replace note
 
 app.patch('/note/edit/:id', (req, res) => {
-  const notez = note.find((t) => t.id === parseInt(req.params.id)); // Array.find()
-  note[parseInt(req.params.id)].push(req.body)
+   const notez = note.find((t) => t.id === parseInt(req.params.id)); 
+  if (!notez) return res.status(404).json({ message: 'note does not exit' });
+  Object.assign(notez, req.body);
   res.status(200).json(notez);
+
+
 });
 
 

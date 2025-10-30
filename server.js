@@ -4,13 +4,18 @@ const express = require('express');
 const app = express();
 const path = require('path')
 const fs = require('fs');
-const PORT = process.env.PORT;
+const PORT = process.env.PORT ;
 
 //middleware
 app.use(express.urlencoded({extended : true}))
 app.use(express.json());
 const accessLog = fs.createWriteStream(path.join(__dirname,'access.log'),{flag:'a'});
 app.use(morgan('combined',{stream:accessLog}));
+app.use(express.static(path.join(__dirname, 'public'))); 
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 //the note array
 let note =[
@@ -23,9 +28,14 @@ let note =[
 ];
 
 //isServer up
-app.get('/',(req,res)=>{
-	res.send('server active 😁');
+// simple health check
+app.get('/health', (req, res) => {
+	res.json({ status: 'ok' });
 });
+
+// Mount API routes (from routes/notes.js) at /api/notes
+const notesRouter = require(path.join(__dirname, 'routes', 'notes'));
+app.use('/api/notes', notesRouter);
 
 //get every note
 app.get('/note',(req,res)=>{

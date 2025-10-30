@@ -123,6 +123,7 @@
 ‎{
 ‎  "error": "title and body is neede"
 ‎}
+
 ‎```
 ‎
 ‎**Note:** Both `title` and `content` fields are required.
